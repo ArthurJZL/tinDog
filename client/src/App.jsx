@@ -1,35 +1,70 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import axios from 'axios';
+import Login from './logIn';
+import MainContainer from './containers/MainContainer';
+import DogForm from './components/DogForm';
+import DogDetails from './components/DogDetails';
+import './styling/App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [token, setToken] = useState(null);
+  const [dogs, setDogs] = useState([]);
+
+  useEffect(() => {
+    if (token) {
+      axios
+        .get('http://localhost:3000/dogs', {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((response) => setDogs(response.data))
+        .catch((error) => console.error('Error fetching dogs:', error));
+    }
+  }, [token]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <Router>
+      <div className="app-container">
+        <h1 className="app-title">TinDog</h1>
+        <Routes>
+          <Route path='/' element={<Login setToken={setToken} />} />
+          <Route
+            path='/dogs'
+            element={
+              token ? (
+                <MainContainer dogs={dogs} token={token} />
+              ) : (
+                <Login setToken={setToken} />
+              )
+            }
+          />
+          <Route
+            path='/add-dog'
+            element={
+              token ? (
+                <DogForm
+                  token={token}
+                  setDog={(newDog) => setDogs([...dogs, newDog])}
+                />
+              ) : (
+                <Login setToken={setToken} />
+              )
+            }
+          />
+          <Route
+            path='/dogs/:id'
+            element={
+              token ? (
+                <DogDetails token={token} />
+              ) : (
+                <Login setToken={setToken} />
+              )
+            }
+          />
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    </Router>
+  );
+};
 
-export default App
+export default App;
