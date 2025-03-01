@@ -61,6 +61,39 @@ dogController.postDogs = async (req, res, next) => {
   return next();
 };
 
+// Add a dog to user's matches
+dogController.addDogToMatches = async (req, res, next) => {
+  try {
+    console.log('Enter addDogToMatches');
+    const userId = req.user.userId;
+    const { dogId } = req.params;
+
+    console.log('userId : ', userId, 'dogId :', dogId);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { matches: dogId } },
+      { new: true }
+    );
+
+    res.locals.updatedUser = updatedUser;
+    return next();
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+};
+
+dogController.getMatchedDogs = async (req, res, next) => {
+  try {
+    const userId = req.user.userId;
+    const user = await User.findById(userId).populate('matches');
+    res.locals.matchedDogs = user.matches;
+    return next();
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+};
+
 //update one dog info by ID
 dogController.updateDog = async (req, res, next) => {
   const { id } = req.params;

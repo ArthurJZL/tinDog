@@ -13,4 +13,15 @@ router.get('/', authController, dogController.getUserDogs, (req, res) => {
   res.status(200).json(res.locals.userDogs);
 });
 
+// Add a dog to user's matches
+router.post('/match/:dogId', authController, dogController.addDogToMatches, (req, res) => {
+    res.status(200).json(res.locals.updatedUser);
+  });
+
+// Get all matched dogs for the authenticated user
+router.get('/matches', authController, dogController.getMatchedDogs, (req, res) => {
+    console.log('get Matched dogs route')
+    res.status(200).json(res.locals.matchedDogs);
+  });
+
 module.exports = router;

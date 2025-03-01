@@ -31,6 +31,10 @@ const UserDogs = ({ token }) => {
     navigate('/add-dog');
   };
 
+  const handleSeeMatches = () =>{
+    navigate('/matches')
+  }
+
   return (
     <div className="user-dogs-container">
       <h1 className="user-dogs-title">Your Dogs</h1>
@@ -40,6 +44,7 @@ const UserDogs = ({ token }) => {
         ))}
       </div>
       <button onClick={handleAddDog} className="add-dog-button">Add a New Dog</button>
+      <button onClick = {handleSeeMatches}>See My Matches</button>
     </div>
   );
 };

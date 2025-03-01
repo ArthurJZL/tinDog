@@ -1,13 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import '../styling/DogCard.css';
 
-const DogCard = ({ dog }) => {
-
-  const navigate = useNavigate();
-
-  const handleViewDetails = ()=>{
-    navigate(`/dogs/${dog._id}`);
+const DogCard = ({ dog, token }) => {
+  const handleLike = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/user/dogs/match/${dog._id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log('Dog liked:', response.data);
+    } catch (error) {
+      console.error('Error liking dog:', error);
+    }
   };
 
   return (
@@ -18,7 +29,7 @@ const DogCard = ({ dog }) => {
           <img key={index} src={url} alt={`${dog.name} ${index}`} />
         ))}
       </div>
-      <button onClick = {handleViewDetails}>View Details</button>
+      <button onClick={handleLike}>Like</button>
     </div>
   );
 };
@@ -29,6 +40,7 @@ DogCard.propTypes = {
     name: PropTypes.string.isRequired,
     pictures: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
+  token: PropTypes.string.isRequired,
 };
 
 export default DogCard;

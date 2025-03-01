@@ -5,6 +5,10 @@
     width:60%;
     overflow-x: auto;
   }
+
+h1 {
+    color:black;
+}
   
   .dog-card {
     background-color: #fff;

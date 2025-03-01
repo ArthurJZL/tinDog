@@ -11,7 +11,7 @@ const MainContainer = ({ dogs, token }) => {
         <UserDogs token={token} />
       </section>
       <section className='cards-section'>
-        <Cards dogs={dogs} />
+        <Cards dogs={dogs} token = {token}/>
       </section>
     </div>
   );

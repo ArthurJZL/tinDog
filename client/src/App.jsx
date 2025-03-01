@@ -5,6 +5,7 @@ import Login from './logIn';
 import MainContainer from './containers/MainContainer';
 import DogForm from './components/DogForm';
 import DogDetails from './components/DogDetails';
+import MatchedDogs from './components/MatchedDogs';
 import './styling/App.css';
 
 const App = () => {
@@ -24,8 +25,8 @@ const App = () => {
 
   return (
     <Router>
-      <div className="app-container">
-        <h1 className="app-title">TinDog</h1>
+      <div className='app-container'>
+        <h1 className='app-title'>TinDog</h1>
         <Routes>
           <Route path='/' element={<Login setToken={setToken} />} />
           <Route
@@ -56,6 +57,16 @@ const App = () => {
             element={
               token ? (
                 <DogDetails token={token} />
+              ) : (
+                <Login setToken={setToken} />
+              )
+            }
+          />
+          <Route
+            path='/matches'
+            element={
+              token ? (
+                <MatchedDogs token={token} />
               ) : (
                 <Login setToken={setToken} />
               )
